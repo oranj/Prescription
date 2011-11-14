@@ -24,8 +24,8 @@ Syntax
 A tag should follow one of these conventions
 
 1. (px:echo var="FOO")
-2. <px:echo var="FOO" /)
-3. <px:echo var="FOO")(/px:echo)
+2. (px:echo var="FOO" /)
+3. (px:echo var="FOO")(/px:echo)
 
 Where all of these are equivalent.
 
