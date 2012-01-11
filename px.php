@@ -103,7 +103,7 @@
 		static function run($html, $parentData = NULL) {
 
 			// Finds all opening / self_closing nodes in the px namespace;
-			$html_preg = '/\(px\:([a-z]+)\s?([^\)^\/]*)(\/?)\)/si';
+			$html_preg = '/\(px\:([a-z]+)\s?([^\)]*?)(\/?)\)/si';
 
 			$limit = -1;//10; // Used for debugging purposes to ensure no infinite loops;
 
