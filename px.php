@@ -11,6 +11,8 @@
 
 	class PX {
 
+		private static $valid_attr = "[a-zA-Z0-9_]+";   // regex for a valid attribute name
+
 		/**
 		* @desc	Given a tag name, attribute string, inner_html, and possible parentdata, processes a tag by the rules defined in the tags/ directory'
 		*/
@@ -20,15 +22,16 @@
 				require_once(dirname(__FILE__).'/tags/'.$tag_name.'.php');
 
 				$regexs = Array(
-					'numeric' => '/([a-z]+)\s*\=\s*([0-9\.]+)/si',
-					'singlequote'=>'/([a-z]*)\s*\=\s*\'(.*?[^\\\\]?)\'/si',
-					'encdoublequote'=>'/([a-z]*)\s*\=\s*&quot;(.*?[^\\\\]?)&quot;/si',
-					'doublequote'=>'/([a-z]*)\s*\=\s*\"(.*?[^\\\\]?)\"/si',
-					'jsonarray'=>'/([a-z]*)\s*\=\s*(\[.*?[^\\\\]?\])/si',
-					'jsonobject'=>'/([a-z]*)\s*\=\s*(\{.*?[^\\\\]?\})/si',
-					'bool'=>'/([a-z]*)\s*\=\s*(true|false|null)/si',
-					'const'=>'/([a-z]*)\s*\=\s*([a-z_]+)/si',
-					'var'=>'/([a-z]*)\s*\=\s*\$([a-z_]+)/si',
+					'numeric'        => '/('.self::$valid_attr.')\s*\=\s*([0-9\.]+)/si',
+					'encsinglequote' => '/('.self::$valid_attr.')\s*\=\s*&#39;(.*?[^\\\\]?)&#39;/si',
+					'singlequote'    => '/('.self::$valid_attr.')\s*\=\s*\'(.*?[^\\\\]?)\'/si',
+					'encdoublequote' => '/('.self::$valid_attr.')\s*\=\s*&quot;(.*?[^\\\\]?)&quot;/si',
+					'doublequote'    => '/('.self::$valid_attr.')\s*\=\s*\"(.*?[^\\\\]?)\"/si',
+					'jsonarray'      => '/('.self::$valid_attr.')\s*\=\s*(\[.*?[^\\\\]?\])/si',
+					'jsonobject'     => '/('.self::$valid_attr.')\s*\=\s*(\{.*?[^\\\\]?\})/si',
+					'bool'           => '/('.self::$valid_attr.')\s*\=\s*(true|false|null)/si',
+					'const'          => '/('.self::$valid_attr.')\s*\=\s*([A-Z_][A-Z0-9_]+)/s',
+					'var'            => '/('.self::$valid_attr.')\s*\=\s*\$([a-zA-Z_]'.self::$valid_attr.')/s',
 				);
 
 				$params = Array();
@@ -103,7 +106,7 @@
 		static function run($html, $parentData = NULL) {
 
 			// Finds all opening / self_closing nodes in the px namespace;
-			$html_preg = '/\(px\:([a-z]+)\s?([^\)]*?)(\/?)\)/si';
+			$html_preg = '/\(px\:('.self::$valid_attr.')\s?([^\)]*?)(\/?)\)/si';
 
 			$limit = -1;//10; // Used for debugging purposes to ensure no infinite loops;
 
@@ -183,18 +186,19 @@
 
 								// These get the parameters and defaults in the function declaration, allowing for json, string, true, false, null, or numerical values
 								$regexs = Array(
-									'numeric'=>'/\&?\$([a-z_]+)\s*\=?\s*([0-9\.]*)/si',
-									'singlequote'=>'/\&?\$([a-z_]+)\s*\=?\s*\'(.*?[^\\\\]?)\'/si',
-									'doublequote'=>'/\&?\$([a-z_]+)\s*\=?\s*\"(.*?[^\\\\]?)\"/si',
-									'encdoublequote'=>'/\&?\$([a-z_]+)\s*\=?\s*&quot\;(.*?[^\\\\]?)&quot;/si',
-									'jsonarray'=>'/\&?\$([a-z_]+)\s*\=?\s*\[(.*?[^\\\\]?)\]/si',
-									'jsonobject'=>'/\&?\$([a-z_]+)\s*\=?\s*\{(.*?[^\\\\]?)\}/si',
-									'bool'=>'/\&?\$([a-z_]+)\s*\=?\s*(true|false|null)/si',
-									'const'=>'/\&?\$([a-z_]+)\s*\=?\s*([a-z_]*)/si',
-									'var'=>'/\&?\$([a-z_]+)\s*\=?\s*\$([a-z_]*)/si',
+									'numeric'        => '/\&?\$('.self::$valid_attr.')\s*\=?\s*([0-9\.]*)/si',
+									'singlequote'    => '/\&?\$('.self::$valid_attr.')\s*\=?\s*\'(.*?[^\\\\]?)\'/si',
+									'encsinglequote' => '/\&?\$('.self::$valid_attr.')\s*\=?\s*&#39;(.*?[^\\\\]?)&#39;/si',
+									'doublequote'    => '/\&?\$('.self::$valid_attr.')\s*\=?\s*\"(.*?[^\\\\]?)\"/si',
+									'encdoublequote' => '/\&?\$('.self::$valid_attr.')\s*\=?\s*&quot\;(.*?[^\\\\]?)&quot;/si',
+									'jsonarray'      => '/\&?\$('.self::$valid_attr.')\s*\=?\s*\[(.*?[^\\\\]?)\]/si',
+									'jsonobject'     => '/\&?\$('.self::$valid_attr.')\s*\=?\s*\{(.*?[^\\\\]?)\}/si',
+									'bool'           => '/\&?\$('.self::$valid_attr.')\s*\=?\s*(true|false|null)/si',
+									'const'          => '/\&?\$('.self::$valid_attr.')\s*\=?\s*([A-Z_][A-Z0-9_]+)/s',
+									'var'            => '/\&?\$('.self::$valid_attr.')\s*\=?\s*\$([a-zA-Z_]'.self::$valid_attr.')/s',
 								);
 
-								if (preg_match_all('/\$([a-z_]+)/si', $function_match[1], $param_match)) {
+								if (preg_match_all('/\$('.self::$valid_attr.')/si', $function_match[1], $param_match)) {
 									$___PX_MANIFEST[$tag]['params'] = array_flip($param_match[1]);
 
 									foreach ($regexs as $type => $regex) {
@@ -218,6 +222,7 @@
 														break;
 													case 'const':
 														$val = constant($val);
+														break;
 													case 'singlequote':
 													case 'doublequote':
 													case 'encdoublequote':
