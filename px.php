@@ -15,7 +15,7 @@
 		* @desc	Given a tag name, attribute string, inner_html, and possible parentdata, processes a tag by the rules defined in the tags/ directory'
 		*/
 		static function tag($tag_name, $attributes, $inner_html = NULL, $parentData = NULL) {
-			$manifest = PX::get_manifest();
+			$manifest = self::get_manifest();
 			if (isset($manifest[$tag_name])) {
 				require_once(dirname(__FILE__).'/tags/'.$tag_name.'.php');
 
@@ -74,7 +74,7 @@
 				if (isset($manifest[$tag_name]['params']['px_innerHTML']) && ! is_null($inner_html)) {
 					$thisAndParentData = $parentData?$parentData:Array();
 					array_unshift($thisAndParentData, $params);
-					$params['px_innerHTML'] = PX::run($inner_html, $thisAndParentData);
+					$params['px_innerHTML'] = self::run($inner_html, $thisAndParentData);
 				} if (isset($manifest[$tag_name]['params']['px_parentData']) && ! is_null($parentData)) {
 					$params['px_parentData'] = $parentData;
 				}
@@ -136,7 +136,7 @@
 				}
 
 				// Process the tag and output the html;
-				$output .= PX::tag($px_tag, $matches[2][0], $inner_html, $parentData);
+				$output .= self::tag($px_tag, $matches[2][0], $inner_html, $parentData);
 
 				$limit--;
 			}
@@ -151,7 +151,7 @@
 			global $___PX_MANIFEST;
 			if (! $___PX_MANIFEST) {
 				// Gets the name of the manifest- respective to the current state of the tags directory
-				$filename = PX::get_manifest_name();
+				$filename = self::get_manifest_name();
 				$px_dir = dirname(__FILE__);
 				$fullpath = $px_dir.'/cache/'.$filename;
 
