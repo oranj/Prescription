@@ -11,6 +11,7 @@
 
 	class PX {
 
+		private static $cache_dir = null;
 		private static $valid_attr = "[a-zA-Z0-9_]+";   // regex for a valid attribute name
 
 		/**
@@ -156,7 +157,7 @@
 				// Gets the name of the manifest- respective to the current state of the tags directory
 				$filename = self::get_manifest_name();
 				$px_dir = dirname(__FILE__);
-				$fullpath = $px_dir.'/cache/'.$filename;
+				$fullpath = ((self::$cache_dir != null) ? self::$cache_dir : $px_dir.'/cache/') . $filename;
 
 				if (false || file_exists($fullpath)) {
 					// If the manifest file exists, return its contents (json_decoded)
@@ -266,6 +267,19 @@
 			$html = file_get_contents($file);
 			$html = self::run($html);
 			return $html;
+		}
+
+		/**
+		* @desc set cache directory if said directory is writeable
+		* @returns bool   true if cache gets set
+		*/
+		static function set_cache_dir($directory) {
+			if ( substr($directory, -1) != '/' ) { $directory .= '/'; }
+
+			$is_dir_is_writable = (is_dir($directory) && is_writable($directory));
+			if ( $is_dir_is_writable ) self::$cache_dir = $directory;
+
+			return $is_dir_is_writable;
 		}
 	}
 
