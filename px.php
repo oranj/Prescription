@@ -148,7 +148,7 @@
 				// Gets the name of the manifest- respective to the current state of the tags directory
 				$filename  = self::get_manifest_name();
 				$px_dir    = dirname(__FILE__);
-				$cache_dir = (self::$cache_dir) ? self::$cache_dir : $px_dir.'/cache/';
+				$cache_dir = self::get_cache_dir();
 				$fullpath  = $cache_dir . $filename;
 
 				if (file_exists($fullpath)) {
@@ -264,15 +264,21 @@
 		}
 
 		/**
-		* @desc set cache directory if said directory is writeable
-		* @returns bool   true if cache gets set
+		* @desc set cache directory (add trailing slash(/) if needed)
 		*/
 		static function set_cache_dir($directory) {
-			if ( substr($directory, -1) != '/' ) { $directory .= '/'; }
+			if ( substr($directory, -1) != '/' ) {
+				$directory .= '/';
+			}
+			self::$cache_dir = $directory;
+		}
 
-			$is_dir_is_writable = (is_dir($directory) && is_writable($directory));
-			if ( $is_dir_is_writable ) self::$cache_dir = $directory;
-
-			return $is_dir_is_writable;
+		/**
+		* @desc get cache directory
+		* $returns string
+		*/
+		static function get_cache_dir() {
+			$default_cache_dir = dirname(__FILE__).'/cache/';
+			return (self::$cache_dir) ? self::$cache_dir : $default_cache_dir;
 		}
 	}
