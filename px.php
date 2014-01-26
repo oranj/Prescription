@@ -2,7 +2,8 @@
 
 	class PX {
 
-		private static $cache_dir = null;
+		private static $manifest   = null;
+		private static $cache_dir  = null;
 		private static $valid_attr = "[a-zA-Z0-9_]+";   // regex for a valid attribute name
 
 		/**
@@ -141,7 +142,8 @@
 		*	@desc Gets data about the known tags. If the manifest file does not exist, generates a new file.
 		*/
 		static function get_manifest() {
-			global $___PX_MANIFEST;
+			$___PX_MANIFEST = self::$manifest;
+
 			if (! $___PX_MANIFEST) {
 				// Gets the name of the manifest- respective to the current state of the tags directory
 				$filename = self::get_manifest_name();
@@ -230,6 +232,8 @@
 					fclose($handle);
 				}
 			}
+
+			self::$manifest = $___PX_MANIFEST;
 			return $___PX_MANIFEST;
 		}
 
