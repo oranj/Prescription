@@ -247,12 +247,11 @@
 		}
 
 		/**
-		*	@desc: runs over a provided template file.
+		*	@desc: runs over a provided file.
 		*/
-		static function template($filename) {
-			$file = DIR_WS_INCLUDES.'templates/'.$filename;
+		static function run_file($file) {
 			if (! file_exists($file)) {
-				error_log('Could not find templated file "'.$filename.'"');
+				error_log('Could not find file "'.$filename.'"');
 			}
 			$html = file_get_contents($file);
 			$html = self::run($html);
