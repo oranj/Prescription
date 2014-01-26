@@ -252,7 +252,7 @@
 		*/
 
 		static function get_manifest_name() {
-			return '.manifest_'.md5(join('', scandir(dirname(__FILE__).'/tags/'))).'.js';
+			return 'px_manifest_'.md5(join('', scandir(dirname(__FILE__).'/tags/'))).'.json';
 		}
 
 		/**
