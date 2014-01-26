@@ -1,14 +1,5 @@
 <?php
 
-	if (! function_exists('dump')) {
-		// My favorite debugging tool ever.
-		function dump($var, $ret = false) {
-			$str = "<pre>".htmlentities(print_r($var, true))."</pre>";
-			if ($ret) { return $str; }
-			echo $str;
-		}
-	}
-
 	class PX {
 
 		private static $cache_dir = null;
@@ -34,8 +25,6 @@
 					'const'          => '/('.self::$valid_attr.')\s*\=\s*([A-Z_][A-Z0-9_]+)/s',
 					'var'            => '/('.self::$valid_attr.')\s*\=\s*\$([a-zA-Z_]'.self::$valid_attr.')/s',
 				);
-
-				$params = Array();
 
 				// Find the defaults as defined by the manifest.
 				$params = isset($manifest[$tag_name]['defaults'])?$manifest[$tag_name]['defaults']:Array();
@@ -159,7 +148,7 @@
 				$px_dir = dirname(__FILE__);
 				$fullpath = ((self::$cache_dir != null) ? self::$cache_dir : $px_dir.'/cache/') . $filename;
 
-				if (false || file_exists($fullpath)) {
+				if (file_exists($fullpath)) {
 					// If the manifest file exists, return its contents (json_decoded)
 					$___PX_MANIFEST = json_decode(file_get_contents($fullpath), true);
 					if (is_null($___PX_MANIFEST)) {
@@ -182,8 +171,6 @@
 
 							$file_contents = file_get_contents($tag_path);
 							if (preg_match($preg, $file_contents, $function_match)) {
-
-								$parameters = Array();
 
 								// These get the parameters and defaults in the function declaration, allowing for json, string, true, false, null, or numerical values
 								$regexs = Array(
@@ -259,7 +246,6 @@
 		*	@desc: runs over a provided template file.
 		*/
 		static function template($filename) {
-			global $PX_Logger;
 			$file = DIR_WS_INCLUDES.'templates/'.$filename;
 			if (! file_exists($file)) {
 				error_log('Could not find templated file "'.$filename.'"');
@@ -282,5 +268,3 @@
 			return $is_dir_is_writable;
 		}
 	}
-
-?>
