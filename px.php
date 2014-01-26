@@ -187,16 +187,16 @@
 
 								// These get the parameters and defaults in the function declaration, allowing for json, string, true, false, null, or numerical values
 								$regexs = Array(
-									'numeric'        => '/\&?\$('.self::$valid_attr.')\s*\=?\s*([0-9\.]*)/si',
-									'singlequote'    => '/\&?\$('.self::$valid_attr.')\s*\=?\s*\'(.*?[^\\\\]?)\'/si',
-									'encsinglequote' => '/\&?\$('.self::$valid_attr.')\s*\=?\s*&#39;(.*?[^\\\\]?)&#39;/si',
-									'doublequote'    => '/\&?\$('.self::$valid_attr.')\s*\=?\s*\"(.*?[^\\\\]?)\"/si',
-									'encdoublequote' => '/\&?\$('.self::$valid_attr.')\s*\=?\s*&quot\;(.*?[^\\\\]?)&quot;/si',
-									'jsonarray'      => '/\&?\$('.self::$valid_attr.')\s*\=?\s*\[(.*?[^\\\\]?)\]/si',
-									'jsonobject'     => '/\&?\$('.self::$valid_attr.')\s*\=?\s*\{(.*?[^\\\\]?)\}/si',
-									'bool'           => '/\&?\$('.self::$valid_attr.')\s*\=?\s*(true|false|null)/si',
-									'const'          => '/\&?\$('.self::$valid_attr.')\s*\=?\s*([A-Z_][A-Z0-9_]+)/s',
-									'var'            => '/\&?\$('.self::$valid_attr.')\s*\=?\s*\$([a-zA-Z_]'.self::$valid_attr.')/s',
+									'numeric'        => '/\&?\$('.self::$valid_attr.')\s*\=\s*([0-9\.]*)/si',
+									'singlequote'    => '/\&?\$('.self::$valid_attr.')\s*\=\s*\'(.*?[^\\\\]?)\'/si',
+									'encsinglequote' => '/\&?\$('.self::$valid_attr.')\s*\=\s*&#39;(.*?[^\\\\]?)&#39;/si',
+									'doublequote'    => '/\&?\$('.self::$valid_attr.')\s*\=\s*\"(.*?[^\\\\]?)\"/si',
+									'encdoublequote' => '/\&?\$('.self::$valid_attr.')\s*\=\s*&quot\;(.*?[^\\\\]?)&quot;/si',
+									'jsonarray'      => '/\&?\$('.self::$valid_attr.')\s*\=\s*\[(.*?[^\\\\]?)\]/si',
+									'jsonobject'     => '/\&?\$('.self::$valid_attr.')\s*\=\s*\{(.*?[^\\\\]?)\}/si',
+									'bool'           => '/\&?\$('.self::$valid_attr.')\s*\=\s*(true|false|null)/si',
+									'const'          => '/\&?\$('.self::$valid_attr.')\s*\=\s*([A-Z_][A-Z0-9_]+)/s',
+									'var'            => '/\&?\$('.self::$valid_attr.')\s*\=\s*\$([a-zA-Z_]'.self::$valid_attr.')/s',
 								);
 
 								if (preg_match_all('/\$('.self::$valid_attr.')/si', $function_match[1], $param_match)) {
