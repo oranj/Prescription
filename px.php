@@ -146,9 +146,10 @@
 
 			if (! $___PX_MANIFEST) {
 				// Gets the name of the manifest- respective to the current state of the tags directory
-				$filename = self::get_manifest_name();
-				$px_dir = dirname(__FILE__);
-				$fullpath = ((self::$cache_dir != null) ? self::$cache_dir : $px_dir.'/cache/') . $filename;
+				$filename  = self::get_manifest_name();
+				$px_dir    = dirname(__FILE__);
+				$cache_dir = (self::$cache_dir) ? self::$cache_dir : $px_dir.'/cache/';
+				$fullpath  = $cache_dir . $filename;
 
 				if (file_exists($fullpath)) {
 					// If the manifest file exists, return its contents (json_decoded)
@@ -159,7 +160,6 @@
 				} else {
 					// If it doesn't, build a new maniefest file.
 					$___PX_MANIFEST = Array();
-					$handle = fopen($fullpath, 'w');
 
 					$strs = Array('false'=>false, 'true'=>true, 'null'=>NULL);
 
@@ -228,8 +228,13 @@
 						}
 					}
 
-					fwrite($handle, json_encode($___PX_MANIFEST));
-					fclose($handle);
+					if (is_dir($cache_dir) && is_writable($cache_dir)) {
+						$handle = fopen($fullpath, 'w');
+						fwrite($handle, json_encode($___PX_MANIFEST));
+						fclose($handle);
+					} else {
+						trigger_error("Cache directory not writable", E_USER_NOTICE);
+					}
 				}
 			}
 
